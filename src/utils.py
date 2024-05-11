@@ -6,6 +6,7 @@ import dill
 import pickle
 from src.exception import CustomException
 from src.logger import logging
+from sklearn.metrics import r2_score
 
 
 def save_object(file_path,obj):
@@ -25,5 +26,27 @@ def save_object(file_path,obj):
 
     except Exception as e:
         raise CustomException(sys,e)
+def evalute_model(x_train,x_test,y_train,y_test,models):
+    try:
+        report={}
+        for i in range (len(list(models))):
+            model=list(models.values())[i]
+            model.fit(x_train,y_train) # model Train
+
+            y_train_pred=model.predict(x_train)
+
+            y_test_pred=model.predict(x_test)
+
+            train_model_score=r2_score(y_train,y_train_pred)
+            test_model_score=r2_score(y_test,y_test_pred)
 
 
+            report[list(models.keys())[i]]=test_model_score
+
+            return report
+
+    except Exception as e:
+
+        raise CustomException(sys,e)
+    
+        
