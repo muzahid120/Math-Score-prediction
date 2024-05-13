@@ -1,19 +1,47 @@
-from src.logger import logging
-import sys
-from src.exception import CustomException
+from flask import Flask,render_template,request,url_for
+
+from src.pipeline.prediction_pipeline import CustomData,PredictPipeline
+
+
+
+
+app=Flask(__name__)
+
+
+
+
+
+@app.route('/')
+def calculate():
+    return render_template ('index.html')
+
+@app.route('/predictdata',methods=['GET','POST'])
+def predict_data_point():
+    if request.method=='GET':
+        return render_template('home.html')
+    else:
+        data=CustomData(
+            gender=request.form.get('gender'),
+            race_ethnicity=request.form.get('ethnicity'),
+            parental_level_of_education=request.form.get('parental_level_of_education'),
+            lunch=request.form.get('lunch'),
+            test_preparation_course=request.form.get('test_preparation_course'),
+            reading_score=float(request.form.get('reading_score')),
+            writing_score=float(request.form.get('writing_score'))
+        )
+        pred_df=data.get_data_as_data_frame()
+        print(pred_df)
+
+        pipeline=PredictPipeline()
+        results=pipeline.predict(pred_df)
+
+        return render_template('home.html',results=results[0])
+    
+
+
+
+
 
 
 if __name__=='__main__':
-    logging.info(' code  run  successfully ! ')
-
-    logging.info('you are my  sweetheart ! ')
-    logging.info('excuation has staarted')
-
-
-    try:
-        a=1/0
-        
-
-    except Exception as E:
-        logging.info('here is Custom error happen')
-        raise CustomException(E,sys)
+    app.run(host="0.0.0.0",debug=True)

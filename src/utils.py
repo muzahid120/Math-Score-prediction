@@ -37,7 +37,7 @@ def evalute_model(x_train,x_test,y_train,y_test,models,param):
             gs = GridSearchCV(model,para,cv=3)
             gs.fit(x_train,y_train)
 
-            
+
 
             model.set_params(**gs.best_params_)
             
@@ -58,5 +58,14 @@ def evalute_model(x_train,x_test,y_train,y_test,models,param):
     except Exception as e:
 
         raise CustomException(sys,e)
+    
+    
+def load_object(file_path):
+    try:
+        with open(file_path, "rb") as file_obj:
+            return pickle.load(file_obj)
+
+    except Exception as e:
+        raise CustomException(e, sys)
     
         
