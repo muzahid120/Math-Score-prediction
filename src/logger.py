@@ -4,7 +4,7 @@ from datetime import datetime
 
 log_file=f"{datetime.now().strftime('%d_%m_%H_%M_%S')}.log"
 
-file_path=os.path.join(os.getcwd(),'log',log_file)
+file_path=os.path.join(os.getcwd(),'log')
 
 os.makedirs(file_path,exist_ok=True)
 
